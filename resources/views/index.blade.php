@@ -16,14 +16,17 @@
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     @vite('resources/css/app.css')
 
 </head>
 
 
-<body class="font-sans antialiased dark:bg-black dark:text-white/50">
+<body class="font-sans antialiased dark:text-white/50">
 
     <div class="w-[100vw] h-[100vh] flex justify-center items-center">
 
@@ -67,7 +70,7 @@
                                 data-modal-toggle="authentication-modal"
                                 class="sticky top-0 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium  text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                 type="button">
-                                <i class="fa-solid fa-arrow-up-from-bracket" class="px-2"></i>  Upload file
+                                <i class="fa-solid fa-arrow-up-from-bracket" class="px-2"></i> Upload file
                             </button>
 
                             <!-- Main modal -->
@@ -145,104 +148,103 @@
 
 
 <script type="module">
-                $(document).ready(function () {
+       
+       $(document).ready(function () {
+           var file_data
 
-                    var file_data
-
-                    //getting all the files function
-                    function updateFileSection() {
-                        $.ajax({
-                            type: 'GET',
-                            url: '/files',
-                            success: function (data) {
-                                file_data = data
-                                var html = ''
-                                data.forEach((item) => {
-                                    html += `<div class="img_div w-[150px] h-[100px] bg-gray-300 cursor-pointer">
+           //getting all the files function
+           function updateFileSection() {
+               $.ajax({
+                   type: 'GET',
+                   url: '/files',
+                   success: function (data) {
+                       file_data = data
+                       var html = ''
+                       data.forEach((item) => {
+                           html += `<div class="img_div w-[150px] h-[100px] bg-gray-300 cursor-pointer">
                                 <img id="${item.id}" src="{{ asset('${item.filepath}') }}" class="img_class h-[90px] w-[150px] " alt />
                                 </div>`
-                                })
-                                $('#photo_section').append(html)
+                       })
+                       $('#photo_section').append(html)
 
-                            },
-                            error: function (xhr, status, error) {
-                                console.error(xhr.responseText);
-                            }
-                        })
+                   },
+                   error: function (xhr, status, error) {
+                       console.error(xhr.responseText);
+                   }
+               })
 
-                    }
+           }
 
-                    //getting all the files
-                    updateFileSection()
+           //getting all the files
+           updateFileSection()
 
-                    //post file
-                    $("#form_submit").submit(function (e) {
-                        e.preventDefault()
-                        const formData = new FormData(this)
-                        $.ajax({
-                            type: 'POST',
-                            url: '/uploadfile',
-                            data: formData,
-                            contentType: false,
-                            processData: false,
-                            success: function (data) {
-                                //console.log(data);
-                                $.ajax({
-                                    type: 'GET',
-                                    url: '/files',
-                                    success: function (data) {
-                                        file_data = data
-                                        var html = ''
-                                        data.forEach((item) => {
-                                            html += `<div class="w-[150px] h-[100px] bg-gray-300 cursor-pointer ml-6">
+           //post file
+           $("#form_submit").submit(function (e) {
+               e.preventDefault()
+               const formData = new FormData(this)
+               $.ajax({
+                   type: 'POST',
+                   url: '/uploadfile',
+                   data: formData,
+                   contentType: false,
+                   processData: false,
+                   success: function (data) {
+                       //console.log(data);
+                       $('[data-modal-hide="authentication-modal"]').click()
+
+                       $('#file_input').val(null)
+
+                       file_data = data
+                       var html = ''
+                       data.forEach((item) => {
+                           html += `<div class="w-[150px] h-[100px] bg-gray-300 cursor-pointer ml-6">
                                         <img id="${item.id}" src="{{ asset('${item.filepath}') }}" class="img_class h-[90px] w-[150px] " alt />
                                         </div>`
-                                        })
+                       })
 
-                                        $('#photo_section').children().remove()
-                                        $('#photo_section').append(html)
-
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error(xhr.responseText);
-                                    }
-                                })
-                            },
-                            error: function (xhr, status, error) {
-                                console.error(error)
-                            }
-                        })
-                    });
+                       $('#photo_section').children().remove()
+                       $('#photo_section').append(html)
 
 
-                    //store all the file that are clicked here
-                    var selectedFiles = []
+                   },
+                   error: function (xhr, status, error) {
+                       console.error(error)
+                   }
+               })
+           });
 
-                    //store the id of the selected files
-                    var selectedFiles_id = []
 
-                    //file functionality
-                    $(document).on("click", ".img_class", function () {
+           //store all the file that are clicked
+           var selectedFiles = []
 
-                        $(this).parent().toggleClass('bg-gray-300 bg-blue-700')
+           //store the id of the selected files
+           var selectedFiles_id = []
 
-                        var anySelected = $('.img_class').parent().hasClass('bg-blue-700');
+           //file functionality
+           $(document).on("click", ".img_class", function () {
 
-                        if (anySelected) {
-                            $('#uploadButton').hide();
-                        } else {
-                            $('#uploadButton').show();
-                        }
+               $(this).parent().toggleClass('bg-gray-300 bg-blue-700')
 
-                        $('#file_settings').children().remove()
+               var anySelected = $('.img_class').parent().hasClass('bg-blue-700');
 
-                        $('#file_settings').html(`<div class="bg-gray-700 w-[100%] py-2.5 px-5" >
-                            <button id="delete_file" class="text-white font-semibold ">Delete</button>
+               if (anySelected) {
+                   $('#uploadButton').hide();
+               } else {
+                   $('#uploadButton').show();
+               }
+
+               $('#file_settings').children().remove()
+
+               $('#file_settings').html(`<div class="bg-gray-700 w-[100%] px-2.5 py-1 flex">
+                            <div id="delete_file" class="flex items-center justify-center gap-x-1 hover:bg-gray-600 p-1">
+                                <i class="fa-solid fa-trash text-white"></i>
+                            <button class="text-white font-semibold">Delete</button>
+                                </div>
                             </div>`)
 
-                      
 
-                        $('#confirm_message').html(`
+
+               $('#confirm_message').html(`
     <div class="flex-1 flex justify-center items-center bg-gray-700 py-2.5 hover:cursor-pointer hover:bg-gray-600" id="cancel_button">
         <i class="fa-solid fa-xmark text-white"></i><button class="px-2 text-white">Cancel</button>
     </div>
@@ -253,130 +255,163 @@
 
 
 
-                        //got the selected file id here...
-                        var file_id = $(this).attr('id')
+               //got the selected file id here...
+               var file_id = $(this).attr('id')
 
-                        //store selected file id
-                        if (!selectedFiles_id.includes(file_id)) {
-                            selectedFiles_id.push(file_id)
-                        } else {
-                            var id_index = selectedFiles_id.indexOf(file_id)
-                            if (id_index !== -1) {
-                                selectedFiles_id.splice(id_index, 1)
-                            }
-                        }
+               //store selected file id
+               if (!selectedFiles_id.includes(file_id)) {
+                   selectedFiles_id.push(file_id)
+               } else {
+                   var id_index = selectedFiles_id.indexOf(file_id)
+                   if (id_index !== -1) {
+                       selectedFiles_id.splice(id_index, 1)
+                   }
+               }
 
-                        //store selected files path
-                        var file_path
-                        file_data.map((item) => {
-                            if (item.id == file_id) {
-                                file_path = item.filepath
-                            }
-                        })
+               //store selected files path
+               var file_path
+               file_data.map((item) => {
+                   if (item.id == file_id) {
+                       file_path = item.filepath
+                   }
+               })
 
-                        if (!selectedFiles.includes(file_path)) {
-                            selectedFiles.push(file_path)
-                        } else {
-                            var index = selectedFiles.indexOf(file_path)
+               if (!selectedFiles.includes(file_path)) {
+                   selectedFiles.push(file_path)
+               } else {
+                   var index = selectedFiles.indexOf(file_path)
 
-                            if (index !== -1) {
-                                selectedFiles.splice(index, 1)
-                            }
-                        }
+                   if (index !== -1) {
+                       selectedFiles.splice(index, 1)
+                   }
+               }
 
-                        //remove functionality if any files are not selected
-                        if (selectedFiles.length === 0) {
-                            $('#confirm_message').children().remove()
-                            $('#file_settings').children().remove()
-                        }
+               //remove functionality if any files are not selected
+               if (selectedFiles.length === 0) {
+                   $('#confirm_message').children().remove()
+                   $('#file_settings').children().remove()
+               }
 
-                        //delete files 
-                        $('#delete_file').click(function () {
-                            var deleteFiles = JSON.stringify(selectedFiles_id)
-                            $.ajax({
-                                url: '/deletefile',
-                                type: "POST",
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                data: {
-                                    files: deleteFiles
-                                },
-                                success: function (response) {
-                                    //console.log(response)
-                                    selectedFiles_id = []
-                                    selectedFiles = []
 
-                                    $.ajax({
-                                        type: 'GET',
-                                        url: '/files',
-                                        success: function (data) {
-                                            file_data = data
-                                            var html = ''
-                                            data.forEach((item) => {
-                                                html += `<div class="w-[150px] h-[100px] bg-gray-300 cursor-pointer ml-6">
+               //delete files 
+               $('#delete_file').click(function () {
+                   var deleteFiles = JSON.stringify(selectedFiles_id)
+
+                   const swalWithBootstrapButtons = Swal.mixin({
+                       customClass: {
+                           confirmButton: "btn btn-success",
+                           cancelButton: "btn btn-danger"
+                       },
+                       buttonsStyling: false
+                   });
+                   swalWithBootstrapButtons.fire({
+                       title: "Are you sure?",
+                       text: "You won't be able to revert this!",
+                       icon: "warning",
+                       showCancelButton: true,
+                       confirmButtonText: "Yes, delete it!",
+                       cancelButtonText: "No, cancel!",
+                       reverseButtons: true
+                   }).then((result) => {
+                       if (result.isConfirmed) {
+
+                           $.ajax({
+                               url: '/deletefile',
+                               type: "POST",
+                               headers: {
+                                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                               },
+                               data: {
+                                   files: deleteFiles
+                               },
+                               success: function (data) {
+
+                                   //console.log(data)
+
+                                   selectedFiles_id = []
+                                   selectedFiles = []
+
+                                   file_data = data.files
+                                   var html = ''
+                                   data.files.forEach((item) => {
+                                       html += `<div class="w-[150px] h-[100px] bg-gray-300 cursor-pointer ml-6">
                                         <img id="${item.id}" src="{{ asset('${item.filepath}') }}" class="img_class h-[90px] w-[150px] " alt />
                                         </div>`
-                                            })
+                                   })
 
-                                            $('#photo_section').children().remove()
-                                            $('#photo_section').append(html)
+                                   $('#photo_section').children().remove()
+                                   $('#photo_section').append(html)
+                                   $('#uploadButton').show()
 
-                                        },
-                                        error: function (xhr, status, error) {
-                                            console.error(xhr.responseText);
-                                        }
-                                    })
-
-                                    if (selectedFiles_id.length === 0) {
-                                        $('#confirm_message').children().remove()
-                                        $('#file_settings').children().remove()
-                                    }
+                                   if (selectedFiles_id.length === 0) {
+                                       $('#confirm_message').children().remove()
+                                       $('#file_settings').children().remove()
+                                   }
 
 
-                                },
-                                error: function (xhr, status, error) {
-                                    console.log(xhr.responseText)
-                                }
-                            })
+                               },
+                               error: function (xhr, status, error) {
+                                   console.log(xhr.responseText)
+                               }
+                           })
 
-                        })
+                           swalWithBootstrapButtons.fire({
+                               title: "Deleted!",
+                               text: "Your file has been deleted.",
+                               icon: "success"
+                           });
+                       } else if (
+                           /* Read more about handling dismissals below */
+                           result.dismiss === Swal.DismissReason.cancel
+                       ) {
+                           swalWithBootstrapButtons.fire({
+                               title: "Cancelled",
+                               text: "Your imaginary file is safe :)",
+                               icon: "error"
+                           });
+                       }
+                   });
+
+               })
 
 
-                        //confirm button
-                        $(document).on('click','#confirm_button',function () {
+               //confirm button
+               $(document).on('click', '#confirm_button', function () {
 
-                            $('[data-modal-hide="default-modal"]').click()
+                   $('[data-modal-hide="default-modal"]').click()
 
-                            $("#show_file_path").val(selectedFiles)
+                   $("#show_file_path").val(selectedFiles)
 
-                        })
+               })
 
 
-                        $(document).on('click','#cancel_button',function () {
+               $(document).on('click', '#cancel_button', function () {
 
-                        $('.img_class').parent().removeClass('bg-blue-700 bg-gray-300').addClass('bg-gray-300')
+                   $('.img_class').parent().removeClass('bg-blue-700 bg-gray-300').addClass('bg-gray-300')
 
-                                selectedFiles = []
-                                selectedFiles_id = []
+                   selectedFiles = []
+                   selectedFiles_id = []
 
-                                $('#confirm_message').children().remove()
-                                $('#file_settings').children().remove()
+                   $('#confirm_message').children().remove()
+                   $('#file_settings').children().remove()
 
-                                var anySelected = $('.img_class').parent().hasClass('bg-blue-700');
-                                
-                                if (anySelected) {
-                            $('#uploadButton').hide();
-                        } else {
-                            $('#uploadButton').show();
-                        }
+                   var anySelected = $('.img_class').parent().hasClass('bg-blue-700');
 
-                            })
+                   if (anySelected) {
+                       $('#uploadButton').hide();
+                   } else {
+                       $('#uploadButton').show();
+                   }
 
-                    });
+               })
 
-                });
+           });
+
+       });
 
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
 </html>
