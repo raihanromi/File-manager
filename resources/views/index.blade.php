@@ -23,6 +23,27 @@
 
     @vite('resources/css/app.css')
 
+
+    <style>
+
+        .swal2-cancel{
+            background-color:gray;
+            padding: 10px;
+            color:white;
+            border-radius:5px;
+            margin:5px; 
+
+        }
+
+        .swal2-confirm{
+            background-color:red;
+            padding: 10px;
+            color:white;
+            border-radius:5px;
+            margin:5px; 
+        }
+    </style>
+
 </head>
 
 
