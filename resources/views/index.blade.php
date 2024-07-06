@@ -144,7 +144,7 @@
                             <div id="file_settings" class="sticky top-0 "></div>
 
                             <!-- show all photos -->
-                            <div class="p-6 flex flex-wrap gap-2" id="photo_section"></div>
+                            <div class="p-6 flex flex-wrap gap-2 justify-center" id="photo_section"></div>
 
                             <!-- show confirmation message -->
                             <div id="confirm_message" class="flex justify-around p-5 sticky bottom-0 mt-auto"></div>
@@ -182,8 +182,8 @@
                        file_data = data
                        var html = ''
                        data.forEach((item) => {
-                           html += `<div class="img_div w-[150px] h-[100px] bg-gray-300 cursor-pointer">
-                                <img id="${item.id}" src="{{ asset('${item.filepath}') }}" class="img_class h-[90px] w-[150px] " alt />
+                           html += `<div class="img_div w-[150px] h-[100px] bg-gray-300 cursor-pointer hover:bg-blue-700">
+                                <img id="${item.id}" src="{{ asset('${item.filepath}') }}" class="img_class h-[95px] w-[150px] " alt />
                                 </div>`
                        })
                        $('#photo_section').append(html)
@@ -219,7 +219,7 @@
                        var html = ''
                        data.forEach((item) => {
                            html += `<div class="w-[150px] h-[100px] bg-gray-300 cursor-pointer ml-6">
-                                        <img id="${item.id}" src="{{ asset('${item.filepath}') }}" class="img_class h-[90px] w-[150px] " alt />
+                                        <img id="${item.id}" src="{{ asset('${item.filepath}') }}" class="img_class h-[95px] w-[150px] " alt />
                                         </div>`
                        })
 
