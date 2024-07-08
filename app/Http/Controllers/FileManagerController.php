@@ -34,6 +34,7 @@ class FileManagerController extends Controller
 
 
     public function getFiles(){
+        //$photos = File::paginate(10);
         $photos = File::all();
         return response()->json($photos);
     }
@@ -64,6 +65,6 @@ class FileManagerController extends Controller
 
         }
 
-        return response()->json('File Deleted', 200);
+        return response()->json(File::all());
     }
 }

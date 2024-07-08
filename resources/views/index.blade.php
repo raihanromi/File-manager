@@ -179,6 +179,7 @@
                    type: 'GET',
                    url: '/files',
                    success: function (data) {
+                    console.log(data)
                        file_data = data
                        var html = ''
                        data.forEach((item) => {
@@ -218,7 +219,7 @@
                        file_data = data
                        var html = ''
                        data.forEach((item) => {
-                           html += `<div class="w-[150px] h-[100px] bg-gray-300 cursor-pointer ml-6">
+                           html += `<div class="w-[150px] h-[100px] bg-gray-300 cursor-pointer ml-6 hover:bg-blue-700">
                                         <img id="${item.id}" src="{{ asset('${item.filepath}') }}" class="img_class h-[95px] w-[150px] " alt />
                                         </div>`
                        })
@@ -352,11 +353,11 @@
                                    selectedFiles_id = []
                                    selectedFiles = []
 
-                                   file_data = data.files
+                                   file_data = data
                                    var html = ''
-                                   data.files.forEach((item) => {
-                                       html += `<div class="w-[150px] h-[100px] bg-gray-300 cursor-pointer ml-6">
-                                        <img id="${item.id}" src="{{ asset('${item.filepath}') }}" class="img_class h-[90px] w-[150px] " alt />
+                                   data.forEach((item) => {
+                                       html += `<div class="w-[150px] h-[100px] bg-gray-300 cursor-pointer ml-6 hover:bg-blue-700">
+                                        <img id="${item.id}" src="{{ asset('${item.filepath}') }}" class="img_class h-[95px] w-[150px] " alt />
                                         </div>`
                                    })
 
